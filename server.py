@@ -3,7 +3,7 @@ import json
 from flask_restful import Api
 from flask_pymongo import PyMongo
 
-app = Flask(__name__)
+app = Flask(__name__, template_folder='templates', static_folder='static')
 app.config['MONGO_URI'] = "mongodb://localhost:27017/levelupDB"
 mongo = PyMongo(app) # initializing db
 api = Api(app) # initializing API
