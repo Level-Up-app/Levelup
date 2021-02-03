@@ -24,7 +24,14 @@ class Task():
 
 @app.route('/', methods=["GET"])
 def get():
-    return "Hello pineapple"
+    db = mongo['task']
+    all_tasks = db.find() # get all tasks from mongo
+
+    if len(all_tasks) > 0:
+        for task in all_tasks:
+            print(task)
+    else:
+        return jsonify({"result": "No Tasks Available"})
 
 @app.route('/task', methods=["POST"])
 def post():
