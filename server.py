@@ -4,7 +4,6 @@ from flask_restful import Api
 from pymongo import MongoClient
 from dotenv import load_dotenv
 from pathlib import Path
-from models import Task
 from factories import TaskFactory
 from json import dumps
 import os
