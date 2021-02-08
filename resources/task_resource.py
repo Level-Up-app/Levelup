@@ -5,7 +5,14 @@ from factories import TaskFactory
 
 class TaskResource(Resource):
     def get(self):
-        pass
+        data = request.get_json()
+        db = mongo['task']  # db
+
+        task = TaskFactory.create(data['title'], data['description'], False)  # create task object
+
+        if task:
+            result = db.insert_one(task.convert_to_json())
+            return jsonify({"result": "task created susccessfully"})
 
     def post(self):
         pass
@@ -15,4 +22,3 @@ class TaskResource(Resource):
 
     def delete(self):
         pass
-    
