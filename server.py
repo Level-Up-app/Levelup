@@ -1,25 +1,20 @@
+from bson import json_util, ObjectId
 from flask import Flask, request, jsonify
 from flask_restful import Api
-from flask_pymongo import PyMongo
+from pymongo import MongoClient
+from dotenv import load_dotenv
+from pathlib import Path
+from models import Task
+import json
+import os
+
+env_path = Path('.')
+load_dotenv(dotenv_path=env_path)
 
 app = Flask(__name__, template_folder='templates', static_folder='static')
-app.config['MONGO_URI'] = "mongodb://localhost:27017/levelupDB"
-mongo = PyMongo(app) # initializing db
+client = MongoClient(os.getenv("CLIENT_URI"))
+mongo = client['levelup_db']
 api = Api(app) # initializing API
-
-
-class Task():
-    """Task Model"""
-    
-    def __init__(self, id, title, description):
-        self.id = id
-        self.title = title
-        self.description = description
-
-    def convert_to_json(self):
-        """converts objects into json"""
-        return self.__dict__
-
 
 
 @app.route('/', methods=["GET"])
@@ -36,7 +31,12 @@ def get():
 @app.route('/task', methods=["POST"])
 def post():
     data = request.get_json()
-    return jsonify(data)
+    db = mongo['task'] # db
+    task = Task(title=data['title'], description=data['description'], complete=False) # create task object
+
+    if task:
+        result = db.insert_one(task.convert_to_json())
+        return jsonify({"result": "task created susccessfully"})
 
 
 if __name__ == '__main__':
