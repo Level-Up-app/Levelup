@@ -5,7 +5,7 @@ from pymongo import MongoClient
 from dotenv import load_dotenv
 from pathlib import Path
 from models import Task
-import json
+from json import dumps
 import os
 
 env_path = Path('.')
@@ -32,11 +32,29 @@ def get():
 def post():
     data = request.get_json()
     db = mongo['task'] # db
-    task = Task(title=data['title'], description=data['description'], complete=False) # create task object
+    task = Task(_id=ObjectId(), title=data['title'], description=data['description'], complete=False) # create task object
 
     if task:
         result = db.insert_one(task.convert_to_json())
         return jsonify({"result": "task created susccessfully"})
+
+@app.route('/task/<task_id>', methods=['PUT'])
+def update(task_id):
+    db = mongo['task']
+    data = request.get_json()
+
+
+    query = {'_id': ObjectId(task_id)}
+    task = Task(_id=ObjectId(task_id), title=data['title'],
+                description=data['description'], complete=False)
+
+    new_values = {"$set": task.convert_to_json()}
+    result = db.find_one_and_update(query, new_values)
+
+    if result == None:
+        return jsonify({'result': 'task does not exist'}), 404
+
+    return dumps(result, default=json_util.default), 200
 
 
 if __name__ == '__main__':
