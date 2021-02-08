@@ -5,6 +5,7 @@ from pymongo import MongoClient
 from dotenv import load_dotenv
 from pathlib import Path
 from models import Task
+from factories import TaskFactory
 from json import dumps
 import os
 
@@ -32,7 +33,8 @@ def get():
 def post():
     data = request.get_json()
     db = mongo['task'] # db
-    task = Task(_id=ObjectId(), title=data['title'], description=data['description'], complete=False) # create task object
+
+    task = TaskFactory.create(data['title'], data['description'], False) # create task object
 
     if task:
         result = db.insert_one(task.convert_to_json())
@@ -43,10 +45,8 @@ def update(task_id):
     db = mongo['task']
     data = request.get_json()
 
-
     query = {'_id': ObjectId(task_id)}
-    task = Task(_id=ObjectId(task_id), title=data['title'],
-                description=data['description'], complete=False)
+    task = TaskFactory(data['title'], data['description'], False)
 
     new_values = {"$set": task.convert_to_json()}
     result = db.find_one_and_update(query, new_values)
