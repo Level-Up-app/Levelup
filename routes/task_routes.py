@@ -2,7 +2,7 @@
 
 from flask import Blueprint
 from flask_restful import Api
-from resources import TaskResource, task_resource
+from resources import TaskResource
 
 task_blueprint = Blueprint('task', __name__)
-Api(task_blueprint).add_resource(TaskResource, '/task')
+Api(task_blueprint).add_resource(TaskResource, "/task")

@@ -1,21 +1,25 @@
-from flask import jsonify, request
+from flask import jsonify, make_response, request
 from flask_restful import Resource
 from factories import TaskFactory
+from db_util import MongoClientService
 
 
 class TaskResource(Resource):
     def get(self):
-        data = request.get_json()
-        db = mongo['task']  # db
-
-        task = TaskFactory.create(data['title'], data['description'], False)  # create task object
-
-        if task:
-            result = db.insert_one(task.convert_to_json())
-            return jsonify({"result": "task created susccessfully"})
+        pass
 
     def post(self):
-        pass
+        data = request.get_json()
+        db_service = MongoClientService()
+
+        if data != None:
+            task = TaskFactory.create(data['title'], data['description'], False)  # create task object
+            db_service.saveTask(task)
+            message = {"result": "task created susccessfully"}
+            return make_response(jsonify(message), 200)
+        else:
+            message = {"result": "Empty data"}
+            return make_response(jsonify(message), 204)
 
     def put(self):
         pass
