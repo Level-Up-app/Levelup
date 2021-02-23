@@ -1,9 +1,11 @@
 from flask_mongoengine import MongoEngine
 from mongoengine import connect
-from mongoengine.connection import DEFAULT_HOST
+from mongoengine.connection import disconnect
          
+db = MongoEngine()
+
 def initialize_db(app):
-    db = MongoEngine(app)
-    connect('level_up', alias='default')
+    db.init_app(app)
+    
     
 

@@ -16,6 +16,7 @@ def init_app():
         from .routes import register_blueprint
         
         initialize_db(app)
+
         register_blueprint(app)
 
     return app
