@@ -1,16 +1,14 @@
 from ..database import db
-from mongoengine.fields import BooleanField, DateField, DateTimeField, StringField
-from mongoengine import connect, disconnect
-from mongoengine import Document
 
 
-class Habit(Document):
-    """Task Model"""
+class Habit(db.Document):
+    """Habit Model"""
 
-    title = StringField()
-    description = StringField()
-    complete = BooleanField()
-    created_at = DateTimeField()
+    title = db.StringField()
+    description = db.StringField()
+    complete = db.BooleanField()
+    created_at = db.DateTimeField()
+    # added_by = db.ReferenceField('User')
 
     def __init__(self, title, description, complete, *args, **kwargs):
         super(Habit, self).__init__(*args, **kwargs)

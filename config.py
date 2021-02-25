@@ -22,6 +22,8 @@ class Config:
     # Defining database that are working with
     MONGODB_SETTINGS = {
                         'db': 'levelup_db', 
-                        'host': environ.get("MONGO_URI"),
+                        'host': environ.get('MONGO_URI'),
                         'connect': True
                         }
+
+    JWT_SECRET_KEY = environ.get('JWT_SECRET_KEY')
