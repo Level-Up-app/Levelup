@@ -1,5 +1,4 @@
 from flask import Blueprint, jsonify, make_response, request, render_template
-from bson import json_util, ObjectId
 from json import dumps
 from ...models import Habit
 from datetime import datetime
@@ -37,3 +36,11 @@ def update_a_habit(habit_id):
         return jsonify({'result': 'habit updated successfully'}), 200
 
     return jsonify({'result': 'something went wrong'}), 404
+
+
+@habit_bp.route('/habit/<habit_id>', methods=['DELETE'])
+def del_a_habit(habit_id):
+    if habit_id:
+        habit = Habit.objects.get(pk=habit_id)
+        habit.delete()
+        return jsonify({'result': 'successfully delete habit'})

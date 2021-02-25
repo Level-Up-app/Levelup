@@ -1,5 +1,6 @@
 """Intialize Flask app"""
 from flask import Flask
+from flask_jwt_extended import JWTManager
 from config import Config
 
 
@@ -15,5 +16,6 @@ def init_app():
         
         initialize_db(app)
         register_blueprint(app)
+        JWTManager(app)
 
     return app
