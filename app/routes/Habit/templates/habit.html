@@ -1,0 +1,6 @@
+{% extends 'base.html' %}
+{% block content %}
+    {% for habit in habits %}
+        {{habit.title}}
+    {% endfor %}
+{% endblock %}

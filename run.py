@@ -1,9 +1,9 @@
 from flask import Flask
 from app import init_app
-import config
+from config import Config
 
 
 app = init_app()
 
 if __name__ == '__main__':
-    app.run(host=config.HOST, port=config.PORT, debug=config.DEBUG)
+    app.run(host=Config.HOST, port=Config.PORT, debug=Config.DEBUG)
