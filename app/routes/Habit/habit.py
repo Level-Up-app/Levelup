@@ -12,10 +12,11 @@ def get_all_habits():
     habits = Habit.objects()
     return render_template('habit.html', habits=habits)
 
-@habit_bp.route('/habit', methods=['GET'])
-def get_habit():
-    habit = Habit.object()
-    return habit
+@habit_bp.route('/habit/<habit_id>', methods=['GET'])
+def get_habit(habit_id):
+    if habit_id:
+        habit = Habit.objects.get(pk=habit_id).to_json()
+        return jsonify({'result': habit})
 
 
 @habit_bp.route('/habit', methods=["POST"])
