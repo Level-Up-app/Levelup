@@ -11,7 +11,6 @@ habit_bp = Blueprint(
 def get_all_habits():
     habits = Habit.objects()
     return render_template('habit.html', habits=habits)
-    # return jsonify(habits)
 
 
 @habit_bp.route('/habit', methods=["POST"])
@@ -39,7 +38,7 @@ def update_a_habit(habit_id):
 
 
 @habit_bp.route('/habit/<habit_id>', methods=['DELETE'])
-def del_a_habit(habit_id):
+def delete_a_habit(habit_id):
     if habit_id:
         habit = Habit.objects.get(pk=habit_id)
         habit.delete()
