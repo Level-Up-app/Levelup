@@ -12,6 +12,11 @@ def get_all_habits():
     habits = Habit.objects()
     return render_template('habit.html', habits=habits)
 
+@habit_bp.route('/habit', methods=['GET'])
+def get_habit():
+    habit = Habit.object()
+    return habit
+
 
 @habit_bp.route('/habit', methods=["POST"])
 def create_a_habit():
