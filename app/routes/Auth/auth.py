@@ -16,7 +16,7 @@ def sign_up():
     # user.save()
     # id = user.pk
     
-    return render_template('auth.html')
+    return render_template('logintest.html')
 
 @auth_bp.route('/auth/login', methods=['POST'])
 def login():
