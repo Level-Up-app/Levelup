@@ -8,13 +8,14 @@ auth_bp = Blueprint(
     'user', __name__, template_folder='templates', static_folder='static'
     )
 
-@auth_bp.route('/auth/signup', methods=['GET', 'POST'])
+@auth_bp.route('/auth/signup', methods=['GET'])
 def sign_up():
     # body = request.get_json()
     # user = User(**body)
     # user.hash_password()
     # user.save()
     # id = user.pk
+    
     return render_template('auth.html')
 
 @auth_bp.route('/auth/login', methods=['POST'])
