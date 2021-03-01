@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+{% block content %}
+
+    
+ 
+           
+           
+  <h3>Show all the habits</h3>
+  {% for habit in habits %}
+    <input type="checkbox" id="habit" name="haabit" value="habit">
+    <label for="habit">{{habit.title}}</label><br>
+  {% endfor %}        
+           
+    
+
+{% endblock %}
