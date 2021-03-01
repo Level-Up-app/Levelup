@@ -11,7 +11,8 @@ habit_bp = Blueprint(
 def show_habits():
     # TODO: get all habits from mongodb
     # TODO: create html page showing all habits 
-    return render_template('habits.html')
+    habits = Habit.objects()
+    return render_template('habits.html', habits=habits)
 
 
 @habit_bp.route('/habits', methods=["GET"])
@@ -22,7 +23,7 @@ def get_all_habits():
 @habit_bp.route('/habit', methods=['GET'])
 def get_habit():
     habit = Habit.object()
-    return habit
+    return habit 
 
 
 @habit_bp.route('/habit', methods=["POST"])
