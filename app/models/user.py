@@ -5,7 +5,7 @@ from flask_bcrypt import generate_password_hash, check_password_hash
 
 class User(db.Document):
     """ User Model """
-
+    name = db.StringField(required=True)
     email = db.EmailField(required=True, unique=True)
     password = db.StringField(required=True, min_lenth=6)
     # habits = db.ListField(db.ReferenceField('Habit', reverse_delete_rule=db.Pull))

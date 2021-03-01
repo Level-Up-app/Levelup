@@ -8,7 +8,7 @@ def init_app():
     """Create Flask application"""
     app = Flask(__name__, template_folder='templates', static_folder='static')
     app.config.from_object(Config)
-
+    
     with app.app_context():
         """Importing parts of the application"""
         from .database import initialize_db
