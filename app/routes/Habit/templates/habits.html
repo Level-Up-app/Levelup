@@ -9,7 +9,7 @@
         <div class="col-md-12">
             <div class="card card-white">
                 <div class="card-body">
-                  <h3>User Habits</h3>
+                  <h3>{{user}}'s Habits</h3>
                   <div>
                     <button type="button" class="create-btn btn btn-primary" data-toggle="modal" data-target="#exampleModal" >Create New Habit</button>
                     <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -73,7 +73,7 @@
                                 <span></span>
                               </div>
                               <div class="modal-footer" >
-                                <button type="button" class="update-btn btn btn-primary" data-dismiss="modal" data-toggle="modal" data-target="#editmodal" >Edit</button>
+                                <button type="button" class="update-btn btn btn-primary" data-dismiss="modal" data-toggle="modal" data-target="#editmodal" value="{{habit}}">Edit</button>
                               </div>
                             </div>
                           </div>
@@ -91,7 +91,7 @@
                                 </button>
                               </div>
                               <div class="modal-body" >
-                                <form action="/habit" method="POST" id="create_habit-form">
+                                <form action="/habit/{{habit.pk}}/edit" method="POST" id="create_habit-form">
                                   <div class="form-group">
                                     <label for="recipient-name" class="col-form-label">Title:</label>
                                     <input type="text" class="title form-control" name="title" id="title" >
@@ -103,7 +103,7 @@
                                 </form>
                               </div>
                               <div class="modal-footer">
-                                <button type="button" class="cta-btn btn btn-primary">Save</button>
+                                <button type="button" value="{{habit.pk}}" class="cta-btn btn btn-primary">Save</button>
                               </div>
                             </div>
                           </div>
@@ -120,7 +120,7 @@
 <style>
 body {
   margin-top: 5rem;
-  background: #c4e1f1;
+  background: #bfdfda;
 }
 
 .todo-nav {
@@ -308,6 +308,7 @@ $( document ).ready(function() {
     });
 });
 
+// helper methods
 var handleDelete = function(habit_id) {
   $.ajax({
     url: '/habit/' + habit_id,
@@ -319,17 +320,22 @@ var handleDelete = function(habit_id) {
   });
 }
 
-var handleUpdate = function(habit_id, habit_title, habit_description) {
+var handleUpdate = function(habit_id) {
   $.ajax({
-    url: '/habit/' + habit_id,
+    url: '/habit/' + habit_id + '/edit',
     type: 'put',
-    data: {habit_id:habit_title, habit_description}
-  })
+    data: {value: habit_id},
+    success: function() {
+      console.log("successfully updated habit")
+    }
+  });
 }
 
+// ____________________________________________
+
 $('.delete-btn').click(function() {
-  var val = $(this).val();
-  handleDelete(val);
+  var habit_id = $(this).val();
+  handleDelete(habit_id);
 });
 
 $('#exampleModal').on('show.bs.modal', function (event) {
@@ -360,11 +366,9 @@ $('.touch-cell').click(function() {
 });
 
 $('.update-btn').click(function() {
-  $('#editmodal').on('show.bs.modal', function(event) {
-    var button = $(event.relatedTarget)
-    var modal = $(this)
-    var title = modal.find('#title').val()
-    var description = modal.find('#description').val()
+  $('.cta-btn').click(function() {
+    var habit_id = $(this).val();
+    handleUpdate(habit_id);
   });
 });
 

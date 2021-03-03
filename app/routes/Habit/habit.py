@@ -9,15 +9,14 @@ habit_bp = Blueprint(
 
 @habit_bp.route('/', methods=['GET'])
 def show_habits():
-    # TODO: get all habits from mongodb
-    # TODO: create html page showing all habits 
     habits = Habit.objects()
     return render_template('habits.html', habits=habits)
 
 @habit_bp.route('/habits', methods=["GET"])
 def get_all_habits():
     habits = Habit.objects()
-    return render_template('habits.html', habits=habits)
+    # return render_template('habits.html', habits=habits, user="Max")
+    return render_template('habits.html', habits=habits, user="Henry")
 
 @habit_bp.route('/habit/<habit_id>', methods=['GET'])
 def get_habit(habit_id):
@@ -36,14 +35,17 @@ def create_a_habit():
 
     return jsonify({"result": "no form"})
 
-@habit_bp.route('/habit/<habit_id>', methods=['PUT'])
+@habit_bp.route('/habit/<habit_id>/edit', methods=['PUT'])
 def update_a_habit(habit_id):
-    body = request.get_json()
-    if body:
-        habit = Habit.objects.get(pk=habit_id).update(**body)
-        return jsonify({'result': 'habit updated successfully'}), 200
+    # body = request.get_json()
 
-    return jsonify({'result': 'something went wrong'}), 404
+    print(habit_id)
+
+    # if body:
+    #     habit = Habit.objects.get(pk=habit_id).update(**body)
+    #     return jsonify({'result': 'habit updated successfully'}), 200
+
+    return jsonify({'result': str(habit_id)}), 200
 
 @habit_bp.route('/habit/<habit_id>', methods=['DELETE'])
 def delete_a_habit(habit_id):
