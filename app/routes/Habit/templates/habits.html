@@ -25,15 +25,10 @@
                             <input type="checkbox">
                           </span>
                           </div>
-                          <span>{{habit.title}}</span>
-                          <a href="javascript:void(0);" class="float-right remove-todo-item">
-                            <i class="icon-close"></i>
-                          </a>
+                          <span id="title">{{habit.title}}</span><a href="javascript:void(0);" class="float-right remove-todo-item"><i class="icon-close"></i></a>
                           <div class="widget-content-right">
-                            <form action="/habit/{{habit.pk}}?_method=DELETE" method="POST" >
-                              <button type="submit-btn" class="border-0 btn-transition btn btn-outline-danger" ><i class="fa fa-trash"></i> 
-                              </button>
-                            </form>
+                            <button type="submit" id="{{habit.pk}}" class="border-0 btn-transition btn btn-outline-danger" ><i class="fa fa-trash"></i> 
+                            </button>
                           </div>
                         </div>
                       {% endfor %} 
@@ -163,6 +158,7 @@ h3 {
 <script src='http://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.2.1.js'></script>
 <script type="text/javascript" >
 
+
 $( document ).ready(function() {
     
     
@@ -224,6 +220,23 @@ $( document ).ready(function() {
         });
     });
 });
+
+var execute = function(habit_id) {
+  $.ajax({
+    url: '/habit/' + habit_id,
+    type: 'delete',
+    data: { value: habit_id },
+    success: function() {
+      console.log("$$$$$$$$$$$$$$$$$$$$$$$$")
+    }
+  });
+}
+
+$('.btn').click(function() {
+  var val = this.id;
+  execute(val);
+});
+
 </script>
 
 

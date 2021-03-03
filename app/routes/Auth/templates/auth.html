@@ -287,29 +287,75 @@
 /*# sourceMappingURL=auth.css.map */
 	</style>
 
-	<div class="form-structor">
-    <form action="/auth" method="POST" >
+    {% if error_message %}
+
+    <script>
+      console.log("*************");
+      console.log("{{error_message}}");
+      alert("{{ error_message }}");
+    </script>
+
+    {% endif %}
+
+  <div class="form-structor">
+    <form action="/auth/signup" method="POST" id="signup-login" >
       <div class="signup">
         <h2 class="form-title" id="signup"><span>or</span>Sign up</h2>
         <div class="form-holder">
-          <input type="text" class="input" placeholder="Name" name="name" />
-          <input type="email" class="input" placeholder="Email" name="email" />
-          <input type="password" class="input" placeholder="Password" name="password" />
+          <input type="text" class="input" placeholder="Name" name="signup-name" id="signup-name"  required>
+          <input type="email" class="input" placeholder="Email" name="signup-email" id="signup-email" required>
+          <input type="password" class="input" placeholder="Password" name="signup-password" id="signup-password" required>
         </div>
-        <button class="submit-btn">Sign up</button>
+        <button class="submit-btn" id="ctaSignUpBtn" >Sign up</button>
       </div>
-    </form>
-    <form action="/auth" method="POST" >
       <div class="login slide-up">
         <div class="center">
           <h2 class="form-title" id="login"><span>or</span>Log in</h2>
           <div class="form-holder">
-            <input type="email" class="input" placeholder="Email" name="email" />
-            <input type="password" class="input" placeholder="Password" name="password" />
+            <input type="email" class="input" placeholder="Email" name="login-email" >
+            <input type="password" class="input" placeholder="Password" name="login-password" >
           </div>
-          <button class="submit-btn">Log in</button>
+          <button class="submit-btn" id="ctaLoginBtn" formaction="/auth/login">Log in</button>
         </div>
       </div>
     </form>
-    </div>
+  </div>
+  
+	
+
+
+    <script >
+      console.clear();
+
+      const loginBtn = document.getElementById('login');
+      const signupBtn = document.getElementById('signup');
+      
+      loginBtn.addEventListener('click', (e) => {
+        let parent = e.target.parentNode.parentNode;
+        Array.from(e.target.parentNode.parentNode.classList).find((element) => {
+          if(element !== "slide-up") {
+            document.getElementById('signup-login').reset();
+            parent.classList.add('slide-up')
+          }else{
+            signupBtn.parentNode.classList.add('slide-up')
+            parent.classList.remove('slide-up')
+          }
+        });
+      });
+      
+      signupBtn.addEventListener('click', (e) => {
+        let parent = e.target.parentNode;
+        Array.from(e.target.parentNode.classList).find((element) => {
+          if (element !== "slide-up") {
+            document.getElementById('signup-login').reset();
+            parent.classList.add('slide-up')
+          } else {
+            loginBtn.parentNode.parentNode.classList.add('slide-up')
+            parent.classList.remove('slide-up')
+          }
+        });
+      });
+      
+     </script>
 {% endblock %}
+

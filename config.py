@@ -27,3 +27,4 @@ class Config:
                         }
 
     JWT_SECRET_KEY = environ.get('JWT_SECRET_KEY')
+    SECRET_KEY= environ.get('SECRET_KEY')
