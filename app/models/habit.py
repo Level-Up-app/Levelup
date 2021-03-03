@@ -10,7 +10,7 @@ class Habit(db.Document):
     created_at = db.DateTimeField()
     # added_by = db.ReferenceField('User')
 
-    def __init__(self, title, description, complete, *args, **kwargs):
+    def __init__(self, title, description, complete=False, *args, **kwargs):
         super(Habit, self).__init__(*args, **kwargs)
         self.title = title
         self.description = description

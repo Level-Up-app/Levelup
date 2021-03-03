@@ -10,9 +10,37 @@
             <div class="card card-white">
                 <div class="card-body">
                   <h3>User Habits</h3>
-                    <!-- <form action="javascript:void(0);">
-                        <input type="text" class="form-control add-task" placeholder="New Task...">
-                    </form> -->
+                  <div>
+                    <button type="button" class="create-btn btn btn-primary" data-toggle="modal" data-target="#exampleModal" >Create New Habit</button>
+                    <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                      <div class="modal-dialog modal-dialog-centered" role="document">
+                        <div class="modal-content">
+                          <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLabel">Create Habit</h5>
+                            <button type="button" class="x close" data-dismiss="modal" aria-label="Close">
+                              <span aria-hidden="true">&times;</span>
+                            </button>
+                          </div>
+                          <div class="modal-body">
+                            <form action="/habit" method="POST" id="create_habit-form">
+                              <div class="form-group">
+                                <label for="recipient-name" class="col-form-label">Title:</label>
+                                <input type="text" class="form-control" name="title" id="recipient-name">
+                              </div>
+                              <div class="form-group">
+                                <label for="message-text" class="col-form-label">Description:</label>
+                                <textarea class="form-control" name="description" id="message-text"></textarea>
+                              </div>
+                            </form>
+                          </div>
+                          <div class="modal-footer">
+                            <button type="button" class="cta-close btn btn-secondary" data-dismiss="modal">Close</button>
+                            <button type="button" class="cta-btn btn btn-primary">Save</button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
                     <ul class="nav nav-pills todo-nav">
                         <li role="presentation" class="nav-item all-task active"><a href="#" class="nav-link">All</a></li>
                         <li role="presentation" class="nav-item active-task"><a href="#" class="nav-link">Active</a></li>
@@ -20,17 +48,67 @@
                     </ul>
                     <div class="todo-list">
                       {% for habit in habits %} 
-                        <div class="todo-item">
-                          <div class="checker"><span class="">
-                            <input type="checkbox">
-                          </span>
+                        <div class="todo-item" >
+                          <div class="checker"><span ><input type="checkbox"></span></div>
+                          <div class="touch-cell" data-toggle="modal" data-target="#show-habit-modal" data-title="{{habit.title}}" data-description="{{habit.description}}" >
+                            <span id="title">{{habit.title}}</span><a href="javascript:void(0);" class="float-right remove-todo-item"><i class="icon-close"></i></a>
                           </div>
-                          <span id="title">{{habit.title}}</span><a href="javascript:void(0);" class="float-right remove-todo-item"><i class="icon-close"></i></a>
                           <div class="widget-content-right">
-                            <button type="submit" id="{{habit.pk}}" class="border-0 btn-transition btn btn-outline-danger" ><i class="fa fa-trash"></i> 
+                            <button type="submit" value="{{habit.pk}}" class="delete-btn border-0 btn-transition btn btn-outline-danger" ><i class="fa fa-trash"></i> 
                             </button>
                           </div>
                         </div>
+
+                        <!-- Showing habit modal -->
+                        <div class="modal fade" id="show-habit-modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                          <div class="modal-dialog modal-dialog-centered" role="document">
+                            <div class="modal-content">
+                              <div class="modal-header">
+                                <h5 class="modal-title" id="exampleModalLabel" ></h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                  <span aria-hidden="true">&times;</span>
+                                </button>
+                              </div>
+                              <div class="modal-body">
+                                <span></span>
+                              </div>
+                              <div class="modal-footer" >
+                                <button type="button" class="update-btn btn btn-primary" data-dismiss="modal" data-toggle="modal" data-target="#editmodal" >Edit</button>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+
+
+                        <!-- modal to edit -->
+                        <div class="modal fade" id="editmodal" tabindex="-1" role="dialog" aria-labelledby="editModalLabel" aria-hidden="true">
+                          <div class="modal-dialog modal-dialog-centered" role="document">
+                            <div class="modal-content">
+                              <div class="modal-header">
+                                <h5 class="modal-title" id="editModalLabel">Edit Habit</h5>
+                                <button type="button" class="x close" data-dismiss="modal" aria-label="Close">
+                                  <span aria-hidden="true">&times;</span>
+                                </button>
+                              </div>
+                              <div class="modal-body" >
+                                <form action="/habit" method="POST" id="create_habit-form">
+                                  <div class="form-group">
+                                    <label for="recipient-name" class="col-form-label">Title:</label>
+                                    <input type="text" class="title form-control" name="title" id="title" >
+                                  </div>
+                                  <div class="form-group">
+                                    <label for="message-text" class="col-form-label">Description:</label>
+                                    <textarea class="form-control" name="description" id="description" ></textarea>
+                                  </div>
+                                </form>
+                              </div>
+                              <div class="modal-footer">
+                                <button type="button" class="cta-btn btn btn-primary">Save</button>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+
                       {% endfor %} 
                     </div>
                 </div>
@@ -154,13 +232,22 @@ h3 {
   float: right;
 }
 
+.create-btn {
+  float: right;
+}
+
+.touch-cell {
+  display: inline-block;
+  width: 88%;
+}
+
 </style>
+
 <script src='http://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.2.1.js'></script>
 <script type="text/javascript" >
 
 
 $( document ).ready(function() {
-    
     
   "use strict";
     var todo = function() { 
@@ -221,21 +308,66 @@ $( document ).ready(function() {
     });
 });
 
-var execute = function(habit_id) {
+var handleDelete = function(habit_id) {
   $.ajax({
     url: '/habit/' + habit_id,
     type: 'delete',
     data: { value: habit_id },
     success: function() {
-      console.log("$$$$$$$$$$$$$$$$$$$$$$$$")
+      console.log("Habit Deleted Successfully")
     }
   });
 }
 
-$('.btn').click(function() {
-  var val = this.id;
-  execute(val);
+var handleUpdate = function(habit_id, habit_title, habit_description) {
+  $.ajax({
+    url: '/habit/' + habit_id,
+    type: 'put',
+    data: {habit_id:habit_title, habit_description}
+  })
+}
+
+$('.delete-btn').click(function() {
+  var val = $(this).val();
+  handleDelete(val);
 });
+
+$('#exampleModal').on('show.bs.modal', function (event) {
+  console.log("Showing Modal")
+});
+
+$('.cta-btn').click(function() {
+  $('#create_habit-form').submit();
+});
+
+$('.x').click(function() {
+  document.getElementById('create_habit-form').reset();
+})
+
+$('.cta-close').click(function() {
+  document.getElementById('create_habit-form').reset();
+});
+
+$('.touch-cell').click(function() {
+  $('#show-habit-modal').on('show.bs.modal', function(event) {
+    var button = $(event.relatedTarget)
+    var title = button.data("title")
+    var description = button.data("description")
+    var modal = $(this)
+    modal.find('.modal-title').text(title)
+    modal.find('.modal-body span').text(description)
+  });
+});
+
+$('.update-btn').click(function() {
+  $('#editmodal').on('show.bs.modal', function(event) {
+    var button = $(event.relatedTarget)
+    var modal = $(this)
+    var title = modal.find('#title').val()
+    var description = modal.find('#description').val()
+  });
+});
+
 
 </script>
 

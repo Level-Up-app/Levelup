@@ -26,16 +26,15 @@ def get_habit(habit_id):
 
 @habit_bp.route('/habit', methods=["POST"])
 def create_a_habit():
-    body = request.get_json()
+    if request.form['title'] and request.form['description']:
+            title = request.form.get('title')
+            description = request.form.get('description')
+            habit = Habit(title=title, description=description, created_at=datetime.utcnow) # create habit object
+            habit.save()
+            message = {"result": "habit created susccessfully"}
+            return redirect('habits')
 
-    if body != None:
-        habit = Habit(**body, created_at=datetime.utcnow) # create habit object
-        habit.save()
-        message = {"result": "habit created susccessfully"}
-        return make_response(jsonify(message), 200)
-    else:
-        message = {"result": "Empty data"}
-        return make_response(jsonify(message), 204)
+    return jsonify({"result": "no form"})
 
 @habit_bp.route('/habit/<habit_id>', methods=['PUT'])
 def update_a_habit(habit_id):
@@ -48,10 +47,7 @@ def update_a_habit(habit_id):
 
 @habit_bp.route('/habit/<habit_id>', methods=['DELETE'])
 def delete_a_habit(habit_id):
-    print("*******************")
     if habit_id:
-        print("*******************")
-        print(habit_id)
         habit = Habit.objects.get(pk=habit_id)
         habit.delete()
     return render_template('habits.html', habits=Habit.objects()), 200
