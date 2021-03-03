@@ -7,24 +7,22 @@ habit_bp = Blueprint(
     'habit', __name__, template_folder='templates', static_folder='static'
     )
 
-@habit_bp.route('/habits', methods=['GET'])
+@habit_bp.route('/', methods=['GET'])
 def show_habits():
     # TODO: get all habits from mongodb
     # TODO: create html page showing all habits 
     habits = Habit.objects()
     return render_template('habits.html', habits=habits)
 
-
 @habit_bp.route('/habits', methods=["GET"])
 def get_all_habits():
     habits = Habit.objects()
-    return render_template('habit.html', habits=habits)
+    return render_template('habits.html', habits=habits)
 
 @habit_bp.route('/habit/<habit_id>', methods=['GET'])
 def get_habit(habit_id):
     habit = Habit.objects.get(pk=habit_id)
     return jsonify({'result': habit}) 
-
 
 @habit_bp.route('/habit', methods=["POST"])
 def create_a_habit():
@@ -39,7 +37,6 @@ def create_a_habit():
         message = {"result": "Empty data"}
         return make_response(jsonify(message), 204)
 
-
 @habit_bp.route('/habit/<habit_id>', methods=['PUT'])
 def update_a_habit(habit_id):
     body = request.get_json()
@@ -49,12 +46,12 @@ def update_a_habit(habit_id):
 
     return jsonify({'result': 'something went wrong'}), 404
 
-
 @habit_bp.route('/habit/<habit_id>', methods=['DELETE'])
 def delete_a_habit(habit_id):
+    print("*******************")
     if habit_id:
         print("*******************")
         print(habit_id)
         habit = Habit.objects.get(pk=habit_id)
         habit.delete()
-    return render_template('/habits', habits=Habit.objects()), 200
+    return render_template('habits.html', habits=Habit.objects()), 200

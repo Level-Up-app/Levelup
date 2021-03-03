@@ -1,6 +1,6 @@
-from flask import Blueprint, jsonify, make_response, request, render_template
+from flask import Blueprint, jsonify, Response, request, render_template, redirect, url_for
 from flask_jwt_extended import create_access_token
-from mongoengine.errors import NotUniqueError
+from mongoengine.errors import NotUniqueError, FieldDoesNotExist
 from ...models import User
 import datetime
 
@@ -15,41 +15,39 @@ def show_signup_login_page():
 
 
 @auth_bp.route('/auth', methods=['POST'])
-def login_signup():
-    is_signup = True
-    print(request.form)
-    for key in request.form:
-        if key == "signup":
-            print("****************")
-        # user = handle_signup()
+def signup():
+    if request.form['signup-name'] or request.form['signup-email'] or request.form['signup-password']:
+        try:
+            user = User(
+                    name=request.form.get('signup-name'), 
+                    email=request.form.get('signup-email'), 
+                    password=request.form.get('signup-password')
+                    )
+            user.hash_password()
+            user.save()
             return render_template('home.html')
-        else:
-            print("failed")
-    # else:
-    #     body = request.get_json()
-    #     user = User.objects.get(email=body.get('email'))
-    #     authorized = user.check_password(body.get('password'))
-    #     if not authorized:
-    #         jsonify({'result': 'nooooooo noooo!'})
+        except FieldDoesNotExist:
+            return render_template('auth.html', error_message='Missing required fields')
+        except NotUniqueError as es:
+            return redirect('auth' )
+    else:
+        user = User.objects.get(email=request.form.get('login-email'))
+        authorized = user.check_password(request.form.get('login-password'))
+        if not authorized:
+            jsonify({'result': 'nooooooo noooo!'})
 
-    #     else: 
-    #         expires = datetime.timedelta(days=7)
-    #         access_token = create_access_token(identity=str(user.pk), expires_delta=expires)
-    #         return jsonify({'result': access_token}), 200
-    # return jsonify({'results': 'something went wrong'})
+        else: 
+            expires = datetime.timedelta(days=7)
+            access_token = create_access_token(identity=str(user.pk), expires_delta=expires)
+            return jsonify({'result': access_token}), 200
 
-
-
-
-def handle_signup():
-    name = request.form.get('name')
-    email = request.form.get('email')
-    password = request.form.get('password')
+@auth_bp.route('/auth/login')
+def login():
     try:
-        user = User(name, email, password)
-        user.hash_password()
-        user.save()
-        return user.name
-    except NotUniqueError:
-        print('something went wrong')
-    
+        user = User.objects.get(email=request.form.get('login-email'))
+        authorized = user.check_password(request.form.get('login-password'))
+        expires = datetime.timedelta(days=7)
+        access_token = create_access_token(identity=str(user.pk), expires_delta=expires)
+        return jsonify({'result': access_token}), 200
+    except Exception as es:
+        return Response(es)
