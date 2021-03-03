@@ -1,4 +1,4 @@
-from flask import Blueprint, jsonify, make_response, request, render_template
+from flask import Blueprint, jsonify, make_response, request, render_template, redirect
 from json import dumps
 from ...models import Habit
 from datetime import datetime
@@ -20,10 +20,10 @@ def get_all_habits():
     habits = Habit.objects()
     return render_template('habit.html', habits=habits)
 
-@habit_bp.route('/habit', methods=['GET'])
-def get_habit():
-    habit = Habit.object()
-    return habit 
+@habit_bp.route('/habit/<habit_id>', methods=['GET'])
+def get_habit(habit_id):
+    habit = Habit.objects.get(pk=habit_id)
+    return jsonify({'result': habit}) 
 
 
 @habit_bp.route('/habit', methods=["POST"])
@@ -53,6 +53,8 @@ def update_a_habit(habit_id):
 @habit_bp.route('/habit/<habit_id>', methods=['DELETE'])
 def delete_a_habit(habit_id):
     if habit_id:
+        print("*******************")
+        print(habit_id)
         habit = Habit.objects.get(pk=habit_id)
         habit.delete()
-        return jsonify({'result': 'successfully delete habit'})
+    return render_template('/habits', habits=Habit.objects()), 200
