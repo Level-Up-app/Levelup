@@ -17,6 +17,7 @@ def show_signup_login_page():
 @auth_bp.route('/auth', methods=['POST'])
 def signup():
     if request.form['signup-name'] or request.form['signup-email'] or request.form['signup-password']:
+        print(request.form)
         try:
             user = User(
                     name=request.form.get('signup-name'), 
@@ -25,29 +26,21 @@ def signup():
                     )
             user.hash_password()
             user.save()
-            return render_template('home.html')
-        except FieldDoesNotExist:
-            return render_template('auth.html', error_message='Missing required fields')
+
+            return render_template('habits.html', user=user.name)
+        # except FieldDoesNotExist:
+        #     return render_template('auth.html', error_message='Missing required fields')
         except NotUniqueError as es:
             return redirect('auth' )
-    else:
-        user = User.objects.get(email=request.form.get('login-email'))
-        authorized = user.check_password(request.form.get('login-password'))
-        if not authorized:
-            jsonify({'result': 'nooooooo noooo!'})
 
-        else: 
+    else:
+        try:
+            user = User.objects.get(email=request.form.get('login-email'))
+            authorized = user.check_password(request.form.get('login-password'))
+            
             expires = datetime.timedelta(days=7)
             access_token = create_access_token(identity=str(user.pk), expires_delta=expires)
-            return jsonify({'result': access_token}), 200
+            return render_template('habits.html', user=user.name), 200
 
-@auth_bp.route('/auth/login')
-def login():
-    try:
-        user = User.objects.get(email=request.form.get('login-email'))
-        authorized = user.check_password(request.form.get('login-password'))
-        expires = datetime.timedelta(days=7)
-        access_token = create_access_token(identity=str(user.pk), expires_delta=expires)
-        return jsonify({'result': access_token}), 200
-    except Exception as es:
-        return Response(es)
+        except Exception as e:
+            return jsonify({'result': str(e)})

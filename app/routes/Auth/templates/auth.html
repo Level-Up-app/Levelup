@@ -8,7 +8,7 @@
   html, body {
     position: relative;
     min-height: 100vh;
-    background-color: #eeededee;
+    background-color: #bfdfda;
     display: -webkit-box;
     display: -ms-flexbox;
     display: flex;
@@ -287,24 +287,14 @@
 /*# sourceMappingURL=auth.css.map */
 	</style>
 
-    {% if error_message %}
-
-    <script>
-      console.log("*************");
-      console.log("{{error_message}}");
-      alert("{{ error_message }}");
-    </script>
-
-    {% endif %}
-
   <div class="form-structor">
-    <form action="/auth/signup" method="POST" id="signup-login" >
+    <form action="/auth" method="POST" id="signup-login" >
       <div class="signup">
         <h2 class="form-title" id="signup"><span>or</span>Sign up</h2>
         <div class="form-holder">
-          <input type="text" class="input" placeholder="Name" name="signup-name" id="signup-name"  required>
-          <input type="email" class="input" placeholder="Email" name="signup-email" id="signup-email" required>
-          <input type="password" class="input" placeholder="Password" name="signup-password" id="signup-password" required>
+          <input type="text" class="input" placeholder="Name" name="signup-name" id="signup-name" >
+          <input type="email" class="input" placeholder="Email" name="signup-email" id="signup-email" >
+          <input type="password" class="input" placeholder="Password" name="signup-password" id="signup-password" >
         </div>
         <button class="submit-btn" id="ctaSignUpBtn" >Sign up</button>
       </div>
